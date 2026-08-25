@@ -91,12 +91,6 @@ python IndigoSync.py
 2. Das Programm verarbeitet die Datensätze und zeigt die Anzahl der erkannten Patienten an.
 3. Klicke auf **🔥 FHIR upload**, um die FHIR-Patientenressourcen an den FHIR-Server zu übertragen.
 
-### CSV-Betrachter / GUI-Prototyp starten
-
-```bash
-python gui.py
-```
-
 ### FHIR-API-Testskript ausführen
 
 ```bash
@@ -129,7 +123,6 @@ Der CSV-Parser unterstützt die gängigen Spaltenbezeichnungen aus Krankenhaus-E
 ```text
 Fhirdigo/
 ├── IndigoSync.py        # Hauptanwendung (CustomTkinter) für CSV-zu-FHIR Sync
-├── gui.py               # Datenbetrachter & FHIR-Client-Prototyp
 ├── test.py              # Testskript für asynchrone FHIR-Client-Abfragen
 ├── .env.example         # Vorlage für Umgebungsvariablen (wird versioniert)
 ├── .env                 # Lokale Konfiguration & Geheimnisse (ignoriert via .gitignore)
