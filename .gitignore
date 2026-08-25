@@ -137,6 +137,12 @@ ENV/
 env.bak/
 venv.bak/
 
+# Node / JS
+node_modules/
+
+# macOS
+.DS_Store
+
 # Spyder project settings
 .spyderproject
 .spyproject

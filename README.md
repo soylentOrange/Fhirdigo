@@ -136,7 +136,6 @@ Fhirdigo/
 ├── assets/              # Logo- und Bildressourcen (z. B. BMBF-Förderlogo)
 ├── tools/
 │   └── environment.yaml # Conda-Umgebungsdefinition
-├── package.json         # Optionale Tooling-/Codegen-Paketdefinition
 └── README.md            # Projektdokumentation
 ```
 
