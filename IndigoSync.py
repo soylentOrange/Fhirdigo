@@ -3,14 +3,36 @@ from tkinter import filedialog, messagebox
 import csv
 import json
 import os
+import sys
 import requests
 from datetime import datetime
 
 def load_env_file(filepath=".env"):
-    """Lädt Umgebungsvariablen aus einer .env-Datei ohne externe Abhängigkeiten."""
-    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), filepath)
-    if not os.path.exists(env_path):
+    """Lädt Umgebungsvariablen aus einer .env-Datei (unterstützt Skript- und PyInstaller-Modus)."""
+    search_dirs = []
+    if getattr(sys, 'frozen', False):
+        # PyInstaller: Ordner der Executable
+        exe_dir = os.path.dirname(sys.executable)
+        search_dirs.append(exe_dir)
+        # Auf macOS (.app Bundle: Contents/MacOS/ -> übergeordneter Ordner der .app)
+        search_dirs.append(os.path.abspath(os.path.join(exe_dir, "..", "..", "..")))
+        if hasattr(sys, '_MEIPASS'):
+            search_dirs.append(sys._MEIPASS)
+    else:
+        search_dirs.append(os.path.dirname(os.path.abspath(__file__)))
+
+    search_dirs.append(os.getcwd())
+
+    env_path = None
+    for d in search_dirs:
+        candidate = os.path.join(d, filepath)
+        if os.path.exists(candidate):
+            env_path = candidate
+            break
+
+    if not env_path or not os.path.exists(env_path):
         return
+
     with open(env_path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
@@ -45,12 +67,15 @@ else:
 class CSVtoFHIRApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("CSV zu FHIR Upload")
+        self.root.title("🔥 Fhirdigo – CSV zu FHIR Sync")
         self.root.geometry("600x400")
         self.root.resizable(True, True)
         self.base_url = os.getenv("FHIR_BASE_URL", "https://token.myoncare.care/firebaseManager/fhir")
         auth_key = os.getenv("FHIR_AUTH_KEY", "")
         self.fhir_auth = f"?key={auth_key}" if auth_key else ""
+
+        # Fenster-Icon setzen (FHIR-Flamme)
+        self.set_app_icon()
 
         # Theme & Appearance
         ctk.set_appearance_mode("dark")
@@ -63,7 +88,7 @@ class CSVtoFHIRApp:
         # Titel
         self.title_label = ctk.CTkLabel(
             self.main_frame,
-            text="🏥 CSV zu FHIR Upload",
+            text="🔥 Fhirdigo – CSV zu FHIR Upload",
             font=("Arial", 16, "bold"),
             justify="center"
         )
@@ -135,6 +160,29 @@ class CSVtoFHIRApp:
                 print(f"⚠️ Drag & Drop Initialisierungsfehler: {e}")
         else:
             print("⚠️ Drag & Drop nicht verfügbar (tkinterdnd2 nicht installiert)")
+
+    def set_app_icon(self):
+        """Setzt das Anwendungs-Icon (FHIR-Flamme) für das Fenster."""
+        try:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            if getattr(sys, 'frozen', False):
+                if hasattr(sys, '_MEIPASS'):
+                    base_dir = sys._MEIPASS
+                else:
+                    base_dir = os.path.dirname(sys.executable)
+
+            png_path = os.path.join(base_dir, "assets", "icon.png")
+            ico_path = os.path.join(base_dir, "assets", "icon.ico")
+
+            if os.path.exists(png_path):
+                import tkinter as tk
+                icon_img = tk.PhotoImage(file=png_path)
+                self.root.iconphoto(True, icon_img)
+                self._app_icon_ref = icon_img
+            elif os.path.exists(ico_path):
+                self.root.iconbitmap(ico_path)
+        except Exception as e:
+            print(f"⚠️ Icon konnte nicht gesetzt werden: {e}")
 
     def on_drop(self, event):
         try:

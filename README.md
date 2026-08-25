@@ -97,6 +97,16 @@ python IndigoSync.py
 python test.py
 ```
 
+### Eigenständige App erstellen (Build)
+
+Mit dem mitgelieferten Build-Skript kann eine eigenständig lauffähige Anwendung (z. B. `.app` auf macOS oder `.exe` auf Windows) erzeugt werden:
+
+```bash
+python build.py
+```
+
+Das fertige Programm wird im Ordner `dist/` abgelegt.
+
 ---
 
 ## 📄 Erwartetes CSV-Format
@@ -123,6 +133,7 @@ Der CSV-Parser unterstützt die gängigen Spaltenbezeichnungen aus Krankenhaus-E
 ```text
 Fhirdigo/
 ├── IndigoSync.py        # Hauptanwendung (CustomTkinter) für CSV-zu-FHIR Sync
+├── build.py             # Automatisches Build-Skript (PyInstaller)
 ├── test.py              # Testskript für asynchrone FHIR-Client-Abfragen
 ├── .env.example         # Vorlage für Umgebungsvariablen (wird versioniert)
 ├── .env                 # Lokale Konfiguration & Geheimnisse (ignoriert via .gitignore)
