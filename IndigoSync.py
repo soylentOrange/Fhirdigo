@@ -67,7 +67,7 @@ else:
 class CSVtoFHIRApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("🔥 Fhirdigo – CSV zu FHIR Sync")
+        self.root.title("🔥 Fhirdigo – CSV zu FHIR Upload")
         self.root.geometry("600x400")
         self.root.resizable(True, True)
         self.base_url = os.getenv("FHIR_BASE_URL", "https://token.myoncare.care/firebaseManager/fhir")
