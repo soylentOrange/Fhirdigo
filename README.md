@@ -152,7 +152,7 @@ Fhirdigo/
 ## 🏛️ Förderhinweis
 
 <p align="center">
-  <img src="assets/bmbf_gefoerdert_vom.svg" alt="Gefördert vom Bundesministerium für Bildung und Forschung" width="280" />
+  <img src="assets/bmbf_gefoerdert_vom.jpeg" alt="Gefördert vom Bundesministerium für Bildung und Forschung" width="280" />
 </p>
 
 Dieses Projekt entstand im Rahmen des folgenden Forschungsvorhabens:
