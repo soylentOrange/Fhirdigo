@@ -4,6 +4,7 @@ import csv
 import json
 import os
 import sys
+import time
 import requests
 from datetime import datetime
 
@@ -513,24 +514,69 @@ class CSVtoFHIRApp:
             return
 
         try:
-            # Hier per FHIR exportieren
-            for patient in self.fhir_patients:
-                response = requests.post(self.base_url + '/Patient' + self.fhir_auth, json=patient)                
-                print(json.dumps(patient, indent=2, separators=(',', ': ')))
-                print('Status:' + str(response.status_code))
+            success_count = 0
+            fail_count = 0
+            rate_limited = False
+            last_error = ""
+
+            total = len(self.fhir_patients)
+            for i, patient in enumerate(self.fhir_patients, 1):
+                self.status_label.configure(
+                    text=f"⏳ Übertrage Patient {i}/{total}...",
+                    text_color="#2196F3"
+                )
+                self.root.update()
+
+                response = requests.post(self.base_url + '/Patient' + self.fhir_auth, json=patient)
+                print(f"[{i}/{total}] Patient: {patient.get('name', [{}])[0].get('family', '')} | Status: {response.status_code}")
                 print(response.content)
 
-            messagebox.showinfo(
-                "Erfolg", 
-                f"✅ {len(self.fhir_patients)} FHIR Patient(en) erfolgreich exportiert\n"
-            )
-            self.status_label.configure(
-                text=f"✅ Exportiert: {len(self.fhir_patients)} Patienten",
-                text_color="#4CAF50"
-            )
+                if response.status_code in (200, 201):
+                    success_count += 1
+                elif response.status_code == 429:
+                    rate_limited = True
+                    fail_count += 1
+                    last_error = "Rate Limit (429 TOO_MUCH_TRIALS) erreicht."
+                    print("⚠️ 429 TOO_MUCH_TRIALS - Server blockiert temporär weitere Anfragen.")
+                    break
+                else:
+                    fail_count += 1
+                    last_error = f"HTTP {response.status_code}: {response.text}"
 
-            # deactivate export button
-            self.export_button.configure(state="disabled")
+                # Kleine Pause (300ms) zwischen Anfragen, um Rate-Limits zu verhindern
+                time.sleep(0.3)
+
+            if rate_limited:
+                messagebox.showerror(
+                    "Rate Limit erreicht (HTTP 429)",
+                    f"⚠️ Der FHIR-Server meldet: TOO_MUCH_TRIALS (Rate Limit).\n\n"
+                    f"Erfolgreich übertragen: {success_count}/{total}\n\n"
+                    f"Der Server sperrt neue Anfragen für einige Minuten.\n"
+                    f"Bitte warten Sie ca. 5-15 Minuten und versuchen Sie es dann erneut."
+                )
+                self.status_label.configure(
+                    text=f"⚠️ Rate Limit (429) nach {success_count}/{total}",
+                    text_color="#FF9800"
+                )
+            elif fail_count == 0:
+                messagebox.showinfo(
+                    "Erfolg",
+                    f"✅ Alle {success_count} FHIR Patient(en) erfolgreich exportiert!\n"
+                )
+                self.status_label.configure(
+                    text=f"✅ Exportiert: {success_count} Patienten",
+                    text_color="#4CAF50"
+                )
+                self.export_button.configure(state="disabled")
+            else:
+                messagebox.showwarning(
+                    "Teilweise fehlgeschlagen",
+                    f"Erfolgreich: {success_count}\nFehlgeschlagen: {fail_count}\n\nLetzter Fehler:\n{last_error}"
+                )
+                self.status_label.configure(
+                    text=f"⚠️ {success_count} ok, {fail_count} Fehler",
+                    text_color="#FF9800"
+                )
 
         except Exception as e:
             messagebox.showerror("Fehler", f"Fehler beim FHIR-Upload:\n{str(e)}")
