@@ -91,11 +91,6 @@ python IndigoSync.py
 2. Das Programm verarbeitet die Datensätze und zeigt die Anzahl der erkannten Patienten an.
 3. Klicke auf **🔥 FHIR upload**, um die FHIR-Patientenressourcen an den FHIR-Server zu übertragen.
 
-### FHIR-API-Testskript ausführen
-
-```bash
-python test.py
-```
 
 ### Eigenständige App erstellen (Build)
 
