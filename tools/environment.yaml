@@ -1,0 +1,26 @@
+# Environment description for ePaper-Thingy tools
+#
+# Build the conda environment yourself with conda,
+#   activate it in the TERMINAL
+#   Set VS Code to use the python interpreter from the environment
+#
+# Or, when having the Conda Wingman extsion installed in VS Code
+# just build (or activate) this environment using Wingman commands
+# Still, you might need to advise VS Code to use the correct python interpreter
+#
+# https://github.com/atomic-ehr/codegen/tree/main/examples/python-fhirpy
+#npm install @atomic-ehr/codegen
+#
+name: fhirdigo
+channels:
+  - conda-forge
+dependencies:
+  - python=3.14
+  - pip
+  - pip:
+    - fhirpy
+    - customtkinter
+    - requests
+    - fhir.resources
+    - python-dotenv
+    - tkinterdnd2
