@@ -17,7 +17,6 @@ Eine Desktop-Anwendung zum Einlesen von Patientendaten aus CSV-Dateien, deren Ko
   - Normalisierung von Geschlechtsangaben (`M`, `W`, `D` zu FHIR-konformen Werten).
   - Zuordnung von Krankenhaus- und Organisations-Identifikatoren (z. B. UKSH, MyOncare Fallnummern / Patienten-IDs).
 - **Direkter REST-Upload**: Stapelweiser Upload der transformierten FHIR-Ressourcen an den konfigurierten FHIR-Endpunkt.
-- **Robuster Upload & Rate-Limit-Schutz**: Live-Fortschrittsanzeige (`⏳ Übertrage Patient X/Y...`), Validierung der HTTP-Statuscodes (`200`/`201`) und automatische Drosselung (Pacing) zur Vermeidung von Server-Rate-Limits (HTTP 429).
 
 ---
 
@@ -145,14 +144,6 @@ Fhirdigo/
 
 - **FHIR-Endpunkt & Authentifizierung**: Werden über Umgebungsvariablen (`.env`) verwaltet.
 - **Git-Sicherheit**: Die `.env`-Datei ist in der `.gitignore` hinterlegt und wird **nicht** in das GitHub-Repository hochgeladen. Nutzen Sie `.env.example` als Vorlage für neue Installationen.
-
----
-
-## ⚠️ Hinweise zum Upload & Rate-Limiting (HTTP 429)
-
-- **Schutzmechanismus des Servers (`TOO_MUCH_TRIALS`)**: Der Firebase-basierte FHIR-Endpunkt schützt sich vor Überlastung durch automatische Rate-Limits. Werden zu viele Datensätze in sehr kurzer Zeit gesendet, blockiert der Server Anfragen vorübergehend mit dem Statuscode `429` und der Meldung `TOO_MUCH_TRIALS`.
-- **Automatische Drosselung (Pacing)**: Das Programm legt zwischen den einzelnen Patienten-Uploads automatisch eine kurze Pause von 300 ms ein, um das Rate-Limit des Servers zu schonen.
-- **Verhalten bei Fehlern**: Sollte ein Rate-Limit erreicht werden, bricht der Upload kontrolliert ab und informiert über den Fortschritt (`Erfolgreich übertragen: X/Y`). Nach einer kurzen Wartezeit (ca. 5–15 Minuten Cooldown) entsperrt der Server den Zugriff wieder automatisch.
 
 ---
 

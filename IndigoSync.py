@@ -217,15 +217,30 @@ class CSVtoFHIRApp:
             return ','
 
     def convert_date_format(self, date_str):
-        """Konvertiert DD.MM.YYYY zu YYYY-MM-DD (FHIR Standard)"""
-        if not date_str:
+        """Konvertiert verschiedene Datumsformate (DD/MM/YYYY, DD.MM.YYYY, etc.) zu YYYY-MM-DD (FHIR Standard)."""
+        if not date_str or not str(date_str).strip():
             return None
-        try:
-            date_part = date_str.split()[0] if ' ' in date_str else date_str
-            dt = datetime.strptime(date_part, "%d.%m.%Y")
-            return dt.strftime("%Y-%m-%d")
-        except:
-            return date_str
+        
+        date_str = str(date_str).strip()
+        date_part = date_str.split()[0] if ' ' in date_str else date_str
+        
+        formats = [
+            "%d.%m.%Y",  # 27.01.1941
+            "%d/%m/%Y",  # 27/01/1941
+            "%Y-%m-%d",  # 1941-01-27
+            "%Y/%m/%d",  # 1941/01/27
+            "%d-%m-%Y",  # 27-01-1941
+            "%m/%d/%Y",  # 01/27/1941
+        ]
+        
+        for fmt in formats:
+            try:
+                dt = datetime.strptime(date_part, fmt)
+                return dt.strftime("%Y-%m-%d")
+            except ValueError:
+                continue
+                
+        return date_part
 
     def convert_gender(self, gender_str):
         """Konvertiert M/W zu FHIR gender codes"""
