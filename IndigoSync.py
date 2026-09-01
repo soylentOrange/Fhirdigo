@@ -72,8 +72,8 @@ class CSVtoFHIRApp:
         self.root.geometry("600x400")
         self.root.resizable(True, True)
         self.base_url = os.getenv("FHIR_BASE_URL", "https://token.myoncare.care/firebaseManager/fhir")
-        auth_key = os.getenv("FHIR_AUTH_KEY", "")
-        self.fhir_auth = f"?key={auth_key}" if auth_key else ""
+        self.auth_key = os.getenv("FHIR_AUTH_KEY", "")
+        self.institution_id = os.getenv("FHIR_INSTITUTION_ID", "1")
 
         # Fenster-Icon setzen (FHIR-Flamme)
         self.set_app_icon()
@@ -274,7 +274,7 @@ class CSVtoFHIRApp:
             ],
             "active": True,
             "managingOrganization": {
-                "reference": "Organization/1"
+                "reference": f"Organization/{self.institution_id}"
             },
             "identifier": [
                 {
@@ -542,7 +542,26 @@ class CSVtoFHIRApp:
                 )
                 self.root.update()
 
-                response = requests.post(self.base_url + '/Patient' + self.fhir_auth, json=patient)
+                params = {}
+                if self.auth_key:
+                    params["key"] = self.auth_key
+                if self.institution_id:
+                    params["institution"] = self.institution_id
+                    params["institutionId"] = self.institution_id
+
+                headers = {
+                    "Content-Type": "application/json"
+                }
+                if self.institution_id:
+                    headers["X-Institution-Id"] = str(self.institution_id)
+                    headers["Institution"] = str(self.institution_id)
+
+                response = requests.post(
+                    f"{self.base_url}/Patient",
+                    params=params,
+                    json=patient,
+                    headers=headers
+                )
                 print(f"[{i}/{total}] Patient: {patient.get('name', [{}])[0].get('family', '')} | Status: {response.status_code}")
                 print(response.content)
 

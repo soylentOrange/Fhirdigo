@@ -73,6 +73,7 @@ Trage in der Datei `.env` deinen FHIR-Endpunkt und den API-Schlüssel ein:
 ```env
 FHIR_BASE_URL=https://token.myoncare.care/firebaseManager/fhir
 FHIR_AUTH_KEY=dein_geheimer_api_schluessel
+FHIR_INSTITUTION_ID=1
 ```
 
 ---
