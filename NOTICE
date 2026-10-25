@@ -1,0 +1,17 @@
+Fhirdigo (Indigo FHIR Sync)
+Copyright 2026 Universitätsklinikum Schleswig-Holstein (UKSH)
+
+This product is licensed under the Apache License, Version 2.0
+(see the LICENSE file).
+
+Developed within the joint research project "Integrierte Digitale
+Gesundheitsplattform entlang der operativen Versorgungskette (InDiGo)",
+funded by the German Federal Ministry of Education and Research (BMBF),
+grant number 13GW0562E, project management VDI Technologiezentrum GmbH.
+
+Exception: The funding logo assets/bmbf_gefoerdert_vom.jpeg is NOT covered
+by the Apache License 2.0. It is the property of the Federal Ministry and
+may only be used in accordance with its funding guidelines.
+
+Third-party components and their licenses are listed in
+THIRD_PARTY_LICENSES.md.

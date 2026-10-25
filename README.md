@@ -131,6 +131,9 @@ Fhirdigo/
 ├── IndigoSync.py        # Hauptanwendung (CustomTkinter) für CSV-zu-FHIR Sync
 ├── build.py             # Automatisches Build-Skript (PyInstaller)
 ├── test.py              # Testskript für asynchrone FHIR-Client-Abfragen
+├── LICENSE              # Apache License 2.0
+├── NOTICE               # Copyright- und Förderhinweis
+├── THIRD_PARTY_LICENSES.md # Lizenzen der verwendeten Drittkomponenten
 ├── .env.example         # Vorlage für Umgebungsvariablen (wird versioniert)
 ├── .env                 # Lokale Konfiguration & Geheimnisse (ignoriert via .gitignore)
 ├── assets/              # Logo- und Bildressourcen (z. B. BMBF-Förderlogo)
@@ -145,6 +148,16 @@ Fhirdigo/
 
 - **FHIR-Endpunkt & Authentifizierung**: Werden über Umgebungsvariablen (`.env`) verwaltet.
 - **Git-Sicherheit**: Die `.env`-Datei ist in der `.gitignore` hinterlegt und wird **nicht** in das GitHub-Repository hochgeladen. Nutzen Sie `.env.example` als Vorlage für neue Installationen.
+
+---
+
+## ⚖️ Lizenz
+
+Copyright 2026 Universitätsklinikum Schleswig-Holstein (UKSH)
+
+Dieses Projekt steht unter der [Apache License 2.0](LICENSE). Hinweise zu Urheberrecht und Förderung stehen in [NOTICE](NOTICE), die Lizenzen der verwendeten Drittkomponenten in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+
+Ausgenommen ist das Förderlogo `assets/bmbf_gefoerdert_vom.jpeg`: Es unterliegt nicht der Apache-Lizenz und darf nur gemäß den Vorgaben des Fördermittelgebers verwendet werden.
 
 ---
 
